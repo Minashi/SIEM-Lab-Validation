@@ -39,14 +39,14 @@ def keyValidation():
     # b653e7c6-434c-4829-9b0c-518c45e876dd
     key_regex = r"^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
 
-    print("\nIn order for the script to work, an Authorized Service Token must be made.\nPlease see the following link for more information:\nhttps://www.ibm.com/docs/en/qradar-common?topic=forwarding-creating-authentication-token\n")
-    user_input = input("Please enter the Security Key Generated: ")
+    print("\nIn order for the script to work, an Authorized Service Token must be made.\nPlease see the following link for more information: https://www.ibm.com/docs/en/qradar-common?topic=forwarding-creating-authentication-token\n")
+    user_input = input("Please input authorization token: ")
 
     # Validate Key Format is correct
     while not re.match(key_regex, user_input):
         print("Incorrect Input Format...")
         sleep(0.5)
-        user_input = input("Please enter the Security Key Generated: ")
+        user_input = input("Please input authorization token: ")
 
     print("Security Key entered: ", user_input)
     print("Validating SEC KEY Works. One second please...")
@@ -78,10 +78,13 @@ def results():
 def main():
     print("\n\nSuper cool QRadar 150 validation script by Brandon Gonzalez")
 
+    username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez)")
+
     # Receive SEC_KEY and Validate the SEC_KEY works
     SEC_KEY = keyValidation()
 
     # Code the echo into root.token so the ariel_query script functions
+    os.system(f'echo "{SEC_KEY}" > /home/ec2-user/.ariel_query/tokens/localhost.token')
 
     # Loop through tasks and print results
     for task in TASKS:
