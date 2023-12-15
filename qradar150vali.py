@@ -80,14 +80,18 @@ def main():
 
     username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez): ")
 
-    # Receive SEC_KEY and Validate the SEC_KEY works
-    SEC_KEY = keyValidation()
-    print(SEC_KEY)
-    SEC_KEY = str(SEC_KEY)
-    print(SEC_KEY)
+    # check if /root/.ariel_query/tokens/localhost.token exists if not:
+    if os.path.isfile("/root/.ariel_query/tokens/localhost.token") == False:
+        # Receive SEC_KEY and Validate the SEC_KEY works
+        SEC_KEY = keyValidation()
+        print("Saving token to /root/.ariel_query/tokens/localhost.token ...")
+        process = subprocess.Popen('/opt/qradar/bin/ariel_query --save-token', stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+        process.communicate(input=f'{SEC_KEY}')
+        sleep(1)
+        process.kill()
+        print("Saved...")
 
-    # Code the echo into root.token so the ariel_query script functions
-    os.system(f'echo "{SEC_KEY}" > /root/.ariel_query/tokens/localhost.token')
+    print("\nStarting validation check...\n")
 
     # Loop through tasks and print results
     for task in TASKS:
