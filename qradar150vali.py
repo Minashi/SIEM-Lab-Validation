@@ -1,4 +1,19 @@
 import os
+
+# py to compile program into binary
+
+# Check if there is an update for the requests package
+def check_package_update():
+    print("Verifying requests module is present for python3...")
+    sleep(0.5)
+    try:
+        os.system("python3 -m pip install requests")
+        os.system("python3 -m pip install urllib3")
+    except Exception as e:
+        print(f"Error checking for updates for requests. Error message: {e}")
+
+check_package_update()
+
 import re
 import json
 import socket
@@ -9,19 +24,6 @@ import subprocess
 from time import sleep
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# py to compile program into binary
-
-# Check if there is an update for the requests package
-def check_package_update():
-    print("Verifying requests module is present for python3...")
-    sleep(0.5)
-    try:
-        os.system("python3 -m pip install requests")
-    except Exception as e:
-        print(f"Error checking for updates for requests. Error message: {e}")
-
-check_package_update()
 
 # Constants
 TASKS = [
