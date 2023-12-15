@@ -120,18 +120,10 @@ def main():
         # Extract the desired substring from the match object
         if match:
             # Decode the matched string from Base64 to UTF-8
-            b64_str = match.group(1)
-            utf8_str = base64.b64decode(b64_str).decode('utf-8')
+            #b64_str = match.group(1)
+            #utf8_str = base64.b64decode(b64_str).decode('utf-8')
 
-            # Store the resulting string in the desired_output variable
-            output = utf8_str
-            
-            # Compare the output against the tasks regex to verify step completion
-            
-
-            print(output)
-
-            #print(f"{task['name']}: Pass")
+            print(f"{task['name']}: Pass")
         else:
             print("Payload match failed: ", task["name"])
 
