@@ -112,7 +112,7 @@ def main():
         dump = json.dumps(decoded)
 
         # Parse out base64 payload
-        regex_exp = r'\bpayload\":\"([^\s+]+\=\=)\"'
+        regex_exp = r'payload":"(.*)"'
 
         # Use the regex expression to extract the matching string
         match = re.search(regex_exp, decoded)
