@@ -82,8 +82,9 @@ def main():
 
     # Receive SEC_KEY and Validate the SEC_KEY works
     SEC_KEY = keyValidation()
-
+    print(SEC_KEY)
     SEC_KEY = str(SEC_KEY)
+    print(SEC_KEY)
 
     # Code the echo into root.token so the ariel_query script functions
     os.system(f'echo "{SEC_KEY}" > /root/.ariel_query/tokens/localhost.token')
