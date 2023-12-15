@@ -10,6 +10,7 @@ def check_package_update():
     try:
         os.system("python3 -m pip install requests")
         os.system("python3 -m pip install urllib3")
+        os.system("python3 -m pip install pexpect")
     except Exception as e:
         print(f"Error checking for updates for requests. Error message: {e}")
 
@@ -86,9 +87,15 @@ def main():
         # Receive SEC_KEY and Validate the SEC_KEY works
         SEC_KEY = keyValidation()
         print("Saving token to /root/.ariel_query/tokens/localhost.token ...")
-        child = pexpect.spawn('/opt/qradar/bin/ariel_query --save-token')
+
+
+        # THIS IS BREAKING, NEED TO FIGURE OUT HOW TO SEND TOKEN AFTER QUESTION
+        child = pexpect.spawn('/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid=28250072 LAST 24 HOURS" --output JSON --save_token')
         sleep(0.1)
         child.sendline(SEC_KEY)
+        
+        
+        
         print("Saved...")
         child.close()
 
