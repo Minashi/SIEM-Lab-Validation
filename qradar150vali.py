@@ -20,6 +20,7 @@ import json
 import socket
 import urllib3
 import base64
+import pexpect
 import requests
 import subprocess
 
@@ -85,11 +86,11 @@ def main():
         # Receive SEC_KEY and Validate the SEC_KEY works
         SEC_KEY = keyValidation()
         print("Saving token to /root/.ariel_query/tokens/localhost.token ...")
-        process = subprocess.Popen('/opt/qradar/bin/ariel_query --save-token', stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        process.communicate(input=f'{SEC_KEY}')
-        sleep(1)
-        process.kill()
+        child = pexpect.spawn('/opt/qradar/bin/ariel_query --save-token')
+        sleep(0.1)
+        child.sendline(SEC_KEY)
         print("Saved...")
+        child.close()
 
     print("\nStarting validation check...\n")
 
