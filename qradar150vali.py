@@ -78,19 +78,19 @@ def results():
 def main():
     print("\n\nSuper cool QRadar 150 validation script by Brandon Gonzalez")
 
-    username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez)")
+    username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez): ")
 
     # Receive SEC_KEY and Validate the SEC_KEY works
     SEC_KEY = keyValidation()
 
     # Code the echo into root.token so the ariel_query script functions
-    os.system(f'echo "{SEC_KEY}" > /home/ec2-user/.ariel_query/tokens/localhost.token')
+    os.system(f'echo "{SEC_KEY}" > /root/.ariel_query/tokens/localhost.token')
 
     # Loop through tasks and print results
     for task in TASKS:
         qid = task["qid"]
 
-        out = subprocess.check_output(f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON', shell=True)
+        out = subprocess.check_output([f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'], shell=True)
         decoded = out.decode('ascii')
         dump = json.dumps(decoded)
 
