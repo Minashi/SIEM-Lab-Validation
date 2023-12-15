@@ -83,14 +83,18 @@ def main():
     # Receive SEC_KEY and Validate the SEC_KEY works
     SEC_KEY = keyValidation()
 
+    SEC_KEY = str(SEC_KEY)
+
     # Code the echo into root.token so the ariel_query script functions
     os.system(f'echo "{SEC_KEY}" > /root/.ariel_query/tokens/localhost.token')
 
     # Loop through tasks and print results
     for task in TASKS:
         qid = task["qid"]
-
-        out = subprocess.check_output([f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'], shell=True)
+        
+        command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'
+        out = subprocess.check_output(command, shell=True)
+        
         decoded = out.decode('ascii')
         dump = json.dumps(decoded)
 
