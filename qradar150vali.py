@@ -1,4 +1,5 @@
 import os
+from time import sleep
 
 # py to compile program into binary
 
@@ -21,7 +22,6 @@ import urllib3
 import base64
 import requests
 import subprocess
-from time import sleep
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -39,6 +39,7 @@ def keyValidation():
     # b653e7c6-434c-4829-9b0c-518c45e876dd
     key_regex = r"^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
 
+    print("\nIn order for the script to work, an Authorized Service Token must be made.\nPlease see the following link for more information:\nhttps://www.ibm.com/docs/en/qradar-common?topic=forwarding-creating-authentication-token\n")
     user_input = input("Please enter the Security Key Generated: ")
 
     # Validate Key Format is correct
