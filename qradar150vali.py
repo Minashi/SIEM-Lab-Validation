@@ -77,16 +77,16 @@ def results():
     return
 
 # Main function
-def main():
+def main():    
     print("\n\nSuper cool QRadar 150 validation script by Brandon Gonzalez")
 
     username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez): ")
 
-    # check if /root/.ariel_query/tokens/localhost.token exists if not:
-    if os.path.isfile("/root/.ariel_query/tokens/localhost.token") == False:
+    # check if /home/ec2-user/.ariel_query/tokens/localhost.token exists if not:
+    if os.path.isfile("/home/ec2-user/.ariel_query/tokens/localhost.token") == False:
         # Receive SEC_KEY and Validate the SEC_KEY works
         SEC_KEY = keyValidation()
-        print("Saving token to /root/.ariel_query/tokens/localhost.token ...")
+        print("Saving token to /home/ec2-user/.ariel_query/tokens/localhost.token ...")
 
 
         # THIS IS BREAKING, NEED TO FIGURE OUT HOW TO SEND TOKEN AFTER QUESTION
@@ -129,11 +129,11 @@ def main():
             # Compare the output against the tasks regex to verify step completion
             
 
+            print(output)
+
             #print(f"{task['name']}: Pass")
         else:
             print("Payload match failed: ", task["name"])
-
-        print(output)
 
     # do while for input validation asking to create the file
     while True:
