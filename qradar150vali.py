@@ -31,9 +31,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 #----------------------------------------------------------------------------------------------------------------------------
 # Constants for labs steps that generate a log
 TASKS = [
-    {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'},
-    {"name": "License Added", "qid": "28250104", "regex": r'License Identity="(keyNFR-ReliaQuest).*",'},
-    {"name": "License Allocated", "qid": "28250090", "regex": r'License Identity="(keyNFR-ReliaQuest).*",'}
+    {"name": "User Role Management", "qid": "28250072", "regex": '\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'},
+    {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
+    {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
@@ -121,11 +121,10 @@ def main():
 
 
 
-
     # Loop through tasks and print results
     for task in TASKS:
         qid = task["qid"]
-        
+
         command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'
         out = subprocess.check_output(command, shell=True)
         
@@ -141,12 +140,17 @@ def main():
         # Extract the desired substring from the match object
         if match:
             # Decode the matched string from Base64 to UTF-8
-            #b64_str = match.group(1)
-            #utf8_str = base64.b64decode(b64_str).decode('utf-8')
-
-            print(f"{task['name']}: Pass")
+            b64_str = match.group(1)
+            utf8_str = base64.b64decode(b64_str).decode('utf-8')
+            print(utf8_str)
+            print(task['regex'])
+            match = re.search(task['regex'], utf8_str)
+            if match:
+                print(f"{task['name']}: Pass")
+            else:
+                print(f"{task['name']}: Failed")
         else:
-            print("Payload match failed: ", task["name"])
+            print("Ariel Query failed: ", task["name"])
 
     # do while for input validation asking to create the file
     while True:
