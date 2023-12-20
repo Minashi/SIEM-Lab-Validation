@@ -132,6 +132,7 @@ def main():
     except:
         print("Event Processor Deployed: Failed")
 
+    #----------------------------------------------------------------------------------------------------------------------------
     # Deploying The AppHost
     try:
         regex_exp = r'4000'
@@ -149,8 +150,8 @@ def main():
     # Apps Migrated to Apphost
     try:
         regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
-        
-        command = f'grep "{regex_exp}" /var/log/qradar.log'
+
+        command = f'sudo grep "{regex_exp}" /var/log/qradar.log'
         out = subprocess.check_output(command, shell=True)
         out = out.decode("ascii")
 
@@ -160,6 +161,7 @@ def main():
         print("Apps Migrated: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
 
+    # !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
     # Loop through tasks and print results
     for task in TASKS:
         qid = task["qid"]
