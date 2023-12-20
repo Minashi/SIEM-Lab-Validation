@@ -143,17 +143,18 @@ def main():
     else:
         print("AppHost Deployed: Failed")
 
+
+
     #----------------------------------------------------------------------------------------------------------------------------
     # Apps Migrated to Apphost
-    regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
-
-    command = f'grep "{regex_exp}" /var/log/qradar.log'
-    out = subprocess.check_output(command, shell=True)
-    out = out.decode("ascii")
-
-    if re.search(regex_exp, out):
-        print("Apps Migrated: Pass")
-    else:
+    try:
+        regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
+        command = f'grep "{regex_exp}" /var/log/qradar.log'
+        out = subprocess.check_output(command, shell=True)
+        out = out.decode("ascii")
+        if re.search(regex_exp, out):
+            print("Apps Migrated: Pass")
+    except:
         print("Apps Migrated: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
 
