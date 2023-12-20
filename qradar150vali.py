@@ -33,7 +33,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 TASKS = [
     {"name": "User Role Management", "qid": "28250072", "regex": 'Capabilities: { .*(SYSTEM.NETWORKHIERARCHY,SYSTEM.MNGREFERENCEDATA.*Network Overview, Risk Monitoring) }]'},
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
-    {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'}
+    {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
+    {"name": "Component EP Deployed", "qid": "28250272", "regex": 'Name=(eventcollector)'},
+    {"name": "Component AH Deployed", "qid": "28250272", "regex": 'Name=(apphost)'},
+    {"name": "Component WC Deployed", "qid": "28250272", "regex": 'Name=(wincollect)'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
