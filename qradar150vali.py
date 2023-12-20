@@ -120,38 +120,40 @@ def main():
         print("User Management: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
     # Deploying The Event Processor
-    regex_exp = r'1699'
+    try:
+        regex_exp = r'1699'
 
-    command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-    out = subprocess.check_output(command, shell=True)
-    out = out.decode("ascii")
+        command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+        out = subprocess.check_output(command, shell=True)
+        out = out.decode("ascii")
 
-    if re.search(regex_exp, out):
-        print("Event Processor Deployed: Pass")
-    else:
+        if re.search(regex_exp, out):
+            print("Event Processor Deployed: Pass")
+    except:
         print("Event Processor Deployed: Failed")
 
     # Deploying The AppHost
-    regex_exp = r'4000'
+    try:
+        regex_exp = r'4000'
 
-    command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-    out = subprocess.check_output(command, shell=True)
-    out = out.decode("ascii")
+        command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+        out = subprocess.check_output(command, shell=True)
+        out = out.decode("ascii")
 
-    if re.search(regex_exp, out):
-        print("AppHost Deployed: Pass")
-    else:
+        if re.search(regex_exp, out):
+            print("AppHost Deployed: Pass")
+    except:
         print("AppHost Deployed: Failed")
-
-
 
     #----------------------------------------------------------------------------------------------------------------------------
     # Apps Migrated to Apphost
     try:
         regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
+        
         command = f'grep "{regex_exp}" /var/log/qradar.log'
         out = subprocess.check_output(command, shell=True)
         out = out.decode("ascii")
+
         if re.search(regex_exp, out):
             print("Apps Migrated: Pass")
     except:
