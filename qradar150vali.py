@@ -27,9 +27,11 @@ import subprocess
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# Constants
+
+# Constants for labs steps that generate a log
 TASKS = [
-  {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
+    {"name": "Trainee User Created", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
+    {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
   # Add more tasks here
 ]
 
@@ -126,6 +128,11 @@ def main():
             print(f"{task['name']}: Pass")
         else:
             print("Payload match failed: ", task["name"])
+
+    # For none constant tasks, code here. for example, verifying user exists, etc.
+    
+
+
 
     # do while for input validation asking to create the file
     while True:
