@@ -8,9 +8,9 @@ def check_package_update():
     print("Verifying requests module is present for python3...")
     sleep(0.5)
     try:
-        os.system("python3 -m pip install requests")
-        os.system("python3 -m pip install urllib3")
-        os.system("python3 -m pip install pexpect")
+        #os.system("python3 -m pip install requests")
+        #os.system("python3 -m pip install urllib3")
+        #os.system("python3 -m pip install pexpect")
     except Exception as e:
         print(f"Error checking for updates for requests. Error message: {e}")
 
@@ -27,14 +27,13 @@ import subprocess
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-
+#----------------------------------------------------------------------------------------------------------------------------
 # Constants for labs steps that generate a log
 TASKS = [
-    {"name": "Trainee User Created", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
     {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
   # Add more tasks here
 ]
-
+#----------------------------------------------------------------------------------------------------------------------------
 
 # Validate Key Input
 def keyValidation():
@@ -103,6 +102,22 @@ def main():
 
     print("\nStarting validation check...\n")
 
+    # For none constant tasks, code here. for example, verifying user exists, etc.
+
+    #----------------------------------------------------------------------------------------------------------------------------
+    # User Management; Verify trainee created an administrative user
+    regex_exp = r'reliaquest.com:Admin'
+
+    command = f'grep "{regex_exp}" /store/configservices/staging/globalconfig/users.conf'
+    out = subprocess.check_output(command, shell=True)
+    out = out.decode("ascii")
+
+    if re.search(regex_exp, out):
+        print("User Management: Pass")
+    else:
+        print("User Management: Failed")
+    #----------------------------------------------------------------------------------------------------------------------------
+
     # Loop through tasks and print results
     for task in TASKS:
         qid = task["qid"]
@@ -128,11 +143,6 @@ def main():
             print(f"{task['name']}: Pass")
         else:
             print("Payload match failed: ", task["name"])
-
-    # For none constant tasks, code here. for example, verifying user exists, etc.
-    
-
-
 
     # do while for input validation asking to create the file
     while True:
