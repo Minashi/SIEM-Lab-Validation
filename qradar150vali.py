@@ -11,6 +11,7 @@ def check_package_update():
         #os.system("python3 -m pip install requests")
         #os.system("python3 -m pip install urllib3")
         #os.system("python3 -m pip install pexpect")
+        pass
     except Exception as e:
         print(f"Error checking for updates for requests. Error message: {e}")
 
@@ -30,7 +31,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 #----------------------------------------------------------------------------------------------------------------------------
 # Constants for labs steps that generate a log
 TASKS = [
-    {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'}
+    {"name": "User Role Management", "qid": "28250072", "regex": r'\[\"\b(SYSTEM.NETWORKHIERARCHY\"[^\s+]+\b)\"\]'},
+    {"name": "License Added", "qid": "28250104", "regex": r'License Identity="(keyNFR-ReliaQuest).*",'},
+    {"name": "License Allocated", "qid": "28250090", "regex": r'License Identity="(keyNFR-ReliaQuest).*",'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
@@ -81,8 +84,6 @@ def results():
 def main():    
     print("\n\nSuper cool QRadar 150 validation script by Brandon Gonzalez")
 
-    username = input("What is the trainees name? Format is first letter of first name followed by the last name. (Ex. bgonzalez): ")
-
     # check if /home/ec2-user/.ariel_query/tokens/localhost.token exists if not:
     if os.path.isfile("/home/ec2-user/.ariel_query/tokens/localhost.token") == False:
         # Receive SEC_KEY and Validate the SEC_KEY works
@@ -117,6 +118,9 @@ def main():
     else:
         print("User Management: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
+
+
+
 
     # Loop through tasks and print results
     for task in TASKS:
