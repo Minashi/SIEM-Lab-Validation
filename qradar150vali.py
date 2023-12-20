@@ -35,8 +35,7 @@ TASKS = [
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "Component EP Deployed", "qid": "28250272", "regex": 'Name=(eventcollector)'},
-    {"name": "Component AH Deployed", "qid": "28250272", "regex": 'Name=(apphost)'},
-    {"name": "Component WC Deployed", "qid": "28250272", "regex": 'Name=(wincollect)'}
+    {"name": "Component AH Deployed", "qid": "28250272", "regex": 'Name=(hostcontext)'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
