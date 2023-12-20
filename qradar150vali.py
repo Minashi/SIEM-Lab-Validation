@@ -34,8 +34,6 @@ TASKS = [
     {"name": "User Role Management", "qid": "28250072", "regex": 'Capabilities: { .*(SYSTEM.NETWORKHIERARCHY,SYSTEM.MNGREFERENCEDATA.*Network Overview, Risk Monitoring) }]'},
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
-    {"name": "Component EP Deployed", "qid": "28250272", "regex": 'Name=(eventcollector)'},
-    {"name": "Component AH Deployed", "qid": "28250272", "regex": 'Name=(hostcontext)'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
@@ -120,8 +118,31 @@ def main():
     else:
         print("User Management: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
+    # Deploying The Event Processor
+    regex_exp = r'1699'
 
+    command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+    out = subprocess.check_output(command, shell=True)
+    out = out.decode("ascii")
 
+    if re.search(regex_exp, out):
+        print("Event Processor Deployed: Pass")
+    else:
+        print("Event Processor Deployed: Failed")
+
+    # Deploying The AppHost
+    regex_exp = r'4000'
+
+    command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+    out = subprocess.check_output(command, shell=True)
+    out = out.decode("ascii")
+
+    if re.search(regex_exp, out):
+        print("AppHost Deployed: Pass")
+    else:
+        print("AppHost Deployed: Failed")
+
+    #----------------------------------------------------------------------------------------------------------------------------
 
     # Loop through tasks and print results
     for task in TASKS:
