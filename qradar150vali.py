@@ -34,6 +34,7 @@ TASKS = [
     {"name": "User Role Management", "qid": "28250072", "regex": 'Capabilities: { .*(SYSTEM.NETWORKHIERARCHY,SYSTEM.MNGREFERENCEDATA.*Network Overview, Risk Monitoring) }]'},
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
+    #{"name": "QRadar Assistant Downloaded", "qid": "", "regex": ''}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
@@ -142,6 +143,18 @@ def main():
     else:
         print("AppHost Deployed: Failed")
 
+    #----------------------------------------------------------------------------------------------------------------------------
+    # Apps Migrated to Apphost
+    regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
+
+    command = f'grep "{regex_exp}" /var/log/qradar.log'
+    out = subprocess.check_output(command, shell=True)
+    out = out.decode("ascii")
+
+    if re.search(regex_exp, out):
+        print("Apps Migrated: Pass")
+    else:
+        print("Apps Migrated: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
 
     # Loop through tasks and print results
