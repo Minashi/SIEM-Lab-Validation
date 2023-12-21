@@ -122,7 +122,7 @@ def main():
         regex_exp = task['regex']
 
         try:
-            command = f'grep "{regex_exp}" {location}'
+            command = f'sudo grep "{regex_exp}" {location}'
             out = subprocess.check_output(command, shell=True)
             out = out.decode("ascii")
 
