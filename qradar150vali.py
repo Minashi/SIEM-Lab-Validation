@@ -30,12 +30,22 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 #----------------------------------------------------------------------------------------------------------------------------
 # Constants for labs steps that generate a log
-TASKS = [
+EVENTS = [
     {"name": "User Role Management", "qid": "28250072", "regex": 'Capabilities: { .*(SYSTEM.NETWORKHIERARCHY,SYSTEM.MNGREFERENCEDATA.*Network Overview, Risk Monitoring) }]'},
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     #{"name": "QRadar Assistant Downloaded", "qid": "", "regex": ''}
   # Add more tasks here
+]
+#----------------------------------------------------------------------------------------------------------------------------
+# For none constant tasks, code here. for example, verifying user exists, etc.
+# Constants for labs steps that do not generate a log
+INTERNAL = [
+    {"name": "User Management", "Location": "/store/configservices/staging/globalconfig/users.conf", "regex": 'reliaquest.com:Admin'},
+    {"name": "EP Deployed", "Location": "/store/configservices/deployed/deployment.xml", "regex": '1699'},
+    {"name": "AH Deployed", "Location": "/store/configservices/deployed/deployment.xml", "regex": '4000'},
+    {"name": "Migrated Apps to AH", "Location": "/var/log/qradar.log", "regex": '/console/restapi/api/gui_app_framework/migration/apphost/start'}
+    # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
 
@@ -92,7 +102,7 @@ def main():
         print("Saving token to /home/ec2-user/.ariel_query/tokens/localhost.token ...")
 
 
-        # THIS IS BREAKING, NEED TO FIGURE OUT HOW TO SEND TOKEN AFTER QUESTION
+        # NOTE: THIS IS BREAKING, NEED TO FIGURE OUT HOW TO SEND TOKEN AFTER QUESTION
         child = pexpect.spawn('/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid=28250072 LAST 24 HOURS" --output JSON --save_token')
         sleep(0.1)
         child.sendline(SEC_KEY)
@@ -104,66 +114,82 @@ def main():
 
     print("\nStarting validation check...\n")
 
-    # For none constant tasks, code here. for example, verifying user exists, etc.
+
+    # Loop through internal dictionary lab steps and print results
+    for task in INTERNAL:
+        location = task['Location']
+        name = task['name']
+        regex_exp = task['regex']
+
+        try:
+            command = f'grep "{regex_exp}" {location}'
+            out = subprocess.check_output(command, shell=True)
+            out = out.decode("ascii")
+
+            if re.search(regex_exp, out):
+                print(f"{name}: Pass")
+        except:
+            print(f"{name}: Failed")
 
     #----------------------------------------------------------------------------------------------------------------------------
     # User Management; Verify trainee created an administrative user
-    regex_exp = r'reliaquest.com:Admin'
+    # try:
+    #     regex_exp = r'reliaquest.com:Admin'
 
-    command = f'grep "{regex_exp}" /store/configservices/staging/globalconfig/users.conf'
-    out = subprocess.check_output(command, shell=True)
-    out = out.decode("ascii")
+    #     command = f'grep "{regex_exp}" /store/configservices/staging/globalconfig/users.conf'
+    #     out = subprocess.check_output(command, shell=True)
+    #     out = out.decode("ascii")
 
-    if re.search(regex_exp, out):
-        print("User Management: Pass")
-    else:
-        print("User Management: Failed")
+    #     if re.search(regex_exp, out):
+    #         print("User Management: Pass")
+    # except:
+    #     print("User Management: Failed")
+    # #----------------------------------------------------------------------------------------------------------------------------
+    # # Deploying The Event Processor
+    # try:
+    #     regex_exp = r'1699'
+
+    #     command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+    #     out = subprocess.check_output(command, shell=True)
+    #     out = out.decode("ascii")
+
+    #     if re.search(regex_exp, out):
+    #         print("EP Deployed: Pass")
+    # except:
+    #     print("EP Deployed: Failed")
+
+    # #----------------------------------------------------------------------------------------------------------------------------
+    # # Deploying The AppHost
+    # try:
+    #     regex_exp = r'4000'
+
+    #     command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
+    #     out = subprocess.check_output(command, shell=True)
+    #     out = out.decode("ascii")
+
+    #     if re.search(regex_exp, out):
+    #         print("AppHost Deployed: Pass")
+    # except:
+    #     print("AppHost Deployed: Failed")
+
+    # #----------------------------------------------------------------------------------------------------------------------------
+    # # Apps Migrated to Apphost
+    # try:
+    #     regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
+
+    #     command = f'sudo grep "{regex_exp}" /var/log/qradar.log'
+    #     out = subprocess.check_output(command, shell=True)
+    #     out = out.decode("ascii")
+
+    #     if re.search(regex_exp, out):
+    #         print("Apps Migrated: Pass")
+    # except:
+    #     print("Apps Migrated: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
-    # Deploying The Event Processor
-    try:
-        regex_exp = r'1699'
 
-        command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-        out = subprocess.check_output(command, shell=True)
-        out = out.decode("ascii")
-
-        if re.search(regex_exp, out):
-            print("Event Processor Deployed: Pass")
-    except:
-        print("Event Processor Deployed: Failed")
-
-    #----------------------------------------------------------------------------------------------------------------------------
-    # Deploying The AppHost
-    try:
-        regex_exp = r'4000'
-
-        command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-        out = subprocess.check_output(command, shell=True)
-        out = out.decode("ascii")
-
-        if re.search(regex_exp, out):
-            print("AppHost Deployed: Pass")
-    except:
-        print("AppHost Deployed: Failed")
-
-    #----------------------------------------------------------------------------------------------------------------------------
-    # Apps Migrated to Apphost
-    try:
-        regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
-
-        command = f'sudo grep "{regex_exp}" /var/log/qradar.log'
-        out = subprocess.check_output(command, shell=True)
-        out = out.decode("ascii")
-
-        if re.search(regex_exp, out):
-            print("Apps Migrated: Pass")
-    except:
-        print("Apps Migrated: Failed")
-    #----------------------------------------------------------------------------------------------------------------------------
-
-    # !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
+    # NOTE: !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
     # Loop through tasks and print results
-    for task in TASKS:
+    for task in EVENTS:
         qid = task["qid"]
 
         command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'
