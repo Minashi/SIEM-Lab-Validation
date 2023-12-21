@@ -34,7 +34,10 @@ EVENTS = [
     {"name": "User Role Management", "qid": "28250072", "regex": 'Capabilities: { .*(SYSTEM.NETWORKHIERARCHY,SYSTEM.MNGREFERENCEDATA.*Network Overview, Risk Monitoring) }]'},
     {"name": "License Added", "qid": "28250104", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
     {"name": "License Allocated", "qid": "28250090", "regex": 'License Identity="(keyNFR-ReliaQuest).*",'},
+    #{"name": "EP License Utilization Set", "qid": "", "regex": ''}
     #{"name": "QRadar Assistant Downloaded", "qid": "", "regex": ''}
+    {"name": "App Authorized Services", "qid": "28250261", "regex": 'with label QRadar Assistant'},
+    {"name": "Assistant XForce Linked", "qid": "28250217", "regex": 'QRadar Assistant.*(\/console\/restapi\/api\/reference_data)'}
   # Add more tasks here
 ]
 #----------------------------------------------------------------------------------------------------------------------------
@@ -103,7 +106,7 @@ def main():
 
 
         # NOTE: THIS IS BREAKING, NEED TO FIGURE OUT HOW TO SEND TOKEN AFTER QUESTION
-        child = pexpect.spawn('/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid=28250072 LAST 24 HOURS" --output JSON --save_token')
+        child = pexpect.spawn('/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid=28250072 LAST 300 HOURS" --output JSON --save_token')
         sleep(0.1)
         child.sendline(SEC_KEY)
         
@@ -135,11 +138,12 @@ def main():
     #----------------------------------------------------------------------------------------------------------------------------
 
     # NOTE: !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
+    # NOTE: Need better algorithm, I don't think this one is checking EVERY payload from the output of the ariel query leaving steps failed when completed
     # Loop through tasks and print results
     for task in EVENTS:
         qid = task["qid"]
 
-        command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 24 HOURS" --output JSON'
+        command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 200 HOURS" --output JSON'
         out = subprocess.check_output(command, shell=True)
         
         decoded = out.decode('ascii')
