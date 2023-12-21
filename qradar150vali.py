@@ -138,33 +138,33 @@ def main():
     #----------------------------------------------------------------------------------------------------------------------------
 
     # NOTE: !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
-    # NOTE: Need better algorithm, I don't think this one is checking EVERY payload from the output of the ariel query leaving steps failed when completed
-    # Loop through tasks and print results
     for task in EVENTS:
         qid = task["qid"]
 
         command = f'/opt/qradar/bin/ariel_query --query="SELECT payload, * FROM events WHERE qid={qid} LAST 200 HOURS" --output JSON'
         out = subprocess.check_output(command, shell=True)
-        
         decoded = out.decode('ascii')
-        dump = json.dumps(decoded)
 
         # Parse out base64 payload
         regex_exp = r'payload":"(.*)"'
 
         # Use the regex expression to extract the matching string
-        match = re.search(regex_exp, decoded)
+        match = re.findall(regex_exp, decoded)
 
         # Extract the desired substring from the match object
         if match:
+            found = 0
             # Decode the matched string from Base64 to UTF-8
-            b64_str = match.group(1)
-            utf8_str = base64.b64decode(b64_str).decode('utf-8')
-
-            match = re.search(task['regex'], utf8_str)
-            if match:
-                print(f"{task['name']}: Pass")
-            else:
+            for b64_str in match:
+                utf8_str = base64.b64decode(b64_str).decode('utf-8')
+                match = re.search(task['regex'], utf8_str)
+                if match:
+                    print(f"{task['name']}: Pass")
+                    found = 1
+                    break
+                else:
+                    continue
+            if found == 0:
                 print(f"{task['name']}: Failed")
         else:
             print("Ariel Query failed: ", task["name"])
