@@ -114,7 +114,7 @@ def main():
 
     print("\nStarting validation check...\n")
 
-
+    #----------------------------------------------------------------------------------------------------------------------------
     # Loop through internal dictionary lab steps and print results
     for task in INTERNAL:
         location = task['Location']
@@ -128,63 +128,10 @@ def main():
 
             if re.search(regex_exp, out):
                 print(f"{name}: Pass")
+            else:
+                print(f"{name}: Failed")
         except:
             print(f"{name}: Failed")
-
-    #----------------------------------------------------------------------------------------------------------------------------
-    # User Management; Verify trainee created an administrative user
-    # try:
-    #     regex_exp = r'reliaquest.com:Admin'
-
-    #     command = f'grep "{regex_exp}" /store/configservices/staging/globalconfig/users.conf'
-    #     out = subprocess.check_output(command, shell=True)
-    #     out = out.decode("ascii")
-
-    #     if re.search(regex_exp, out):
-    #         print("User Management: Pass")
-    # except:
-    #     print("User Management: Failed")
-    # #----------------------------------------------------------------------------------------------------------------------------
-    # # Deploying The Event Processor
-    # try:
-    #     regex_exp = r'1699'
-
-    #     command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-    #     out = subprocess.check_output(command, shell=True)
-    #     out = out.decode("ascii")
-
-    #     if re.search(regex_exp, out):
-    #         print("EP Deployed: Pass")
-    # except:
-    #     print("EP Deployed: Failed")
-
-    # #----------------------------------------------------------------------------------------------------------------------------
-    # # Deploying The AppHost
-    # try:
-    #     regex_exp = r'4000'
-
-    #     command = f'grep "{regex_exp}" /store/configservices/deployed/deployment.xml'
-    #     out = subprocess.check_output(command, shell=True)
-    #     out = out.decode("ascii")
-
-    #     if re.search(regex_exp, out):
-    #         print("AppHost Deployed: Pass")
-    # except:
-    #     print("AppHost Deployed: Failed")
-
-    # #----------------------------------------------------------------------------------------------------------------------------
-    # # Apps Migrated to Apphost
-    # try:
-    #     regex_exp = r'/console/restapi/api/gui_app_framework/migration/apphost/start'
-
-    #     command = f'sudo grep "{regex_exp}" /var/log/qradar.log'
-    #     out = subprocess.check_output(command, shell=True)
-    #     out = out.decode("ascii")
-
-    #     if re.search(regex_exp, out):
-    #         print("Apps Migrated: Pass")
-    # except:
-    #     print("Apps Migrated: Failed")
     #----------------------------------------------------------------------------------------------------------------------------
 
     # NOTE: !!!!!!!!When running the script as sudo, it errors because the auth token was made in the user account and not root!!!!!!!!
